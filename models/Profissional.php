@@ -15,6 +15,7 @@ use Yii;
  * @property string $Status
  *
  * @property Clinica[] $clinicas
+ * @property ProfissionalClinica[] $profissionalClinicas
  */
 class Profissional extends \yii\db\ActiveRecord
 {
@@ -62,6 +63,16 @@ class Profissional extends \yii\db\ActiveRecord
      */
     public function getClinicas()
     {
-        return $this->hasMany(Clinica::class, ['ProfissionalID' => 'ID']);
+        return $this->hasMany(Clinica::class, ['id' => 'clinica_id'])->viaTable('profissional_clinica', ['profissional_id' => 'ID']);
+    }
+
+    /**
+     * Gets query for [[ProfissionalClinicas]].
+     *
+     * @return \yii\db\ActiveQuery
+     */
+    public function getProfissionalClinicas()
+    {
+        return $this->hasMany(ProfissionalClinica::class, ['profissional_id' => 'ID']);
     }
 }
