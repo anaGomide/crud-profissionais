@@ -42,14 +42,16 @@ $config = [
             ],
         ],
         'db' => $db,
-        /*
+
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                'profissional/cadastro-profissional' => 'profissional/cadastro-profissional',
+                'profissionais/profissional' => 'profissionais/profissional',
             ],
         ],
-        */
+
     ],
     'params' => $params,
 ];
