@@ -1,18 +1,17 @@
 <?php
 
 namespace app\controllers;
-use Yii;
-use app\models\Profissional;
-use app\models\ProfissionaisSearch;
+
 use app\models\ProfissionalClinica;
+use app\models\ProfissionalClinicaSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * ProfissionaisController implements the CRUD actions for Profissional model.
+ * ProfissionalClinicaController implements the CRUD actions for ProfissionalClinica model.
  */
-class ProfissionaisController extends Controller
+class ProfissionalClinicaController extends Controller
 {
     /**
      * @inheritDoc
@@ -33,13 +32,13 @@ class ProfissionaisController extends Controller
     }
 
     /**
-     * Lists all Profissional models.
+     * Lists all ProfissionalClinica models.
      *
      * @return string
      */
     public function actionIndex()
     {
-        $searchModel = new ProfissionaisSearch();
+        $searchModel = new ProfissionalClinicaSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
         return $this->render('index', [
@@ -49,30 +48,30 @@ class ProfissionaisController extends Controller
     }
 
     /**
-     * Displays a single Profissional model.
-     * @param int $ID ID
+     * Displays a single ProfissionalClinica model.
+     * @param int $id ID
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionView($ID)
+    public function actionView($id)
     {
         return $this->render('view', [
-            'model' => $this->findModel($ID),
+            'model' => $this->findModel($id),
         ]);
     }
 
     /**
-     * Creates a new Profissional model.
+     * Creates a new ProfissionalClinica model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
     public function actionCreate()
     {
-        $model = new Profissional();
+        $model = new ProfissionalClinica();
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'ID' => $model->ID]);
+                return $this->redirect(['view', 'id' => $model->id]);
             }
         } else {
             $model->loadDefaultValues();
@@ -84,18 +83,18 @@ class ProfissionaisController extends Controller
     }
 
     /**
-     * Updates an existing Profissional model.
+     * Updates an existing ProfissionalClinica model.
      * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $ID ID
+     * @param int $id ID
      * @return string|\yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate($ID)
+    public function actionUpdate($id)
     {
-        $model = $this->findModel($ID);
+        $model = $this->findModel($id);
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'ID' => $model->ID]);
+            return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('update', [
@@ -104,35 +103,32 @@ class ProfissionaisController extends Controller
     }
 
     /**
-     * Deletes an existing Profissional model.
+     * Deletes an existing ProfissionalClinica model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $ID ID
+     * @param int $id ID
      * @return \yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionDelete($ID)
+    public function actionDelete($id)
     {
-        $this->findModel($ID)->delete();
+        $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
     }
 
     /**
-     * Finds the Profissional model based on its primary key value.
+     * Finds the ProfissionalClinica model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $ID ID
-     * @return Profissional the loaded model
+     * @param int $id ID
+     * @return ProfissionalClinica the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($ID)
+    protected function findModel($id)
     {
-        if (($model = Profissional::findOne(['ID' => $ID])) !== null) {
+        if (($model = ProfissionalClinica::findOne(['id' => $id])) !== null) {
             return $model;
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
-
-    
 }
-

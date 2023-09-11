@@ -24,6 +24,19 @@ $this->params['breadcrumbs'][] = $this->title;
                 'method' => 'post',
             ],
         ]) ?>
+         <?= Html::button('Adicionar Clínica', [
+        'class' => 'btn btn-success',
+        'data' => [
+            'toggle' => 'modal',
+            'target' => '#adicionarClinicaModal', // Defina o ID correto da modal
+        ],
+    ]) ?>
+
+<?= $this->render('_vincular-clinica-modal', [
+    'model' => $model,
+    'modelProfissional' => $model, // Passe o modelo de profissional para a modal
+]) ?>
+
     </p>
 
     <?= DetailView::widget([
