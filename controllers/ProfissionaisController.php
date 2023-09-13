@@ -1,6 +1,9 @@
 <?php
 
 namespace app\controllers;
+
+use app\models\Clinica;
+use app\models\ProfissionalClinicaSearch;
 use Yii;
 use app\models\Profissional;
 use app\models\ProfissionaisSearch;
@@ -56,8 +59,18 @@ class ProfissionaisController extends Controller
      */
     public function actionView($ID)
     {
+        $model = $this->findModel($ID);
+        $modelProfissionalClinica = new ProfissionalClinica();
+        $searchModel = new ProfissionalClinicaSearch();
+        $clinicas = $model->profissionalClinicas; 
+        $dataProvider = $searchModel->search(['ProfissionalClinicaSearch' => ['profissional_id' => $model->ID]]);
+
         return $this->render('view', [
-            'model' => $this->findModel($ID),
+            'model' => $model,
+            'modelProfissionalClinica' => $modelProfissionalClinica,
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+            'clinicas' => $clinicas,
         ]);
     }
 
@@ -132,7 +145,4 @@ class ProfissionaisController extends Controller
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
-
-    
 }
-

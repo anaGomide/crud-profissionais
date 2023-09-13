@@ -26,12 +26,12 @@ class VincularController extends Controller{
 
     public function actionVincularClinica($ID)
 {
-    // Find the Profissional model by ID
-    $profissional = $this->findModel($ID);
+   
+    $profissional = Profissional::findOne($ID);
 
-    // Create a new instance of ProfissionalClinica
+    
     $modelVincular = new ProfissionalClinica();
-    $modelVincular->profissional_id = $ID;
+    $modelVincular->profissional_id = $profissional->ID;
 
     if ($modelVincular->load(Yii::$app->request->post()) && $modelVincular->save()) {
         Yii::$app->session->setFlash('success', 'Profissional vinculado com sucesso a uma clínica.');
@@ -39,7 +39,7 @@ class VincularController extends Controller{
         Yii::$app->session->setFlash('error', 'Erro ao vincular o profissional à clínica.');
     }
 
-    return $this->render('/profissionais/_vincular-clinica-modal', [
+    return $this->render('\profissionais\view', [
         'model' => $modelVincular,
     ]);
 }
