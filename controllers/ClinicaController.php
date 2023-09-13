@@ -1,9 +1,10 @@
 <?php
 
 namespace app\controllers;
-
+use Yii;
 use app\models\Clinica;
 use app\models\ClinicaSearch;
+use app\models\ProfissionalClinica;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -111,8 +112,19 @@ class ClinicaController extends Controller
      */
     public function actionDelete($id)
     {
+        // Verifique se existem registros relacionados na tabela profissional_clinica
+        $relatedRecords = ProfissionalClinica::find()->where(['clinica_id' => $id])->all();
+    
+        if (!empty($relatedRecords)) {
+            Yii::$app->session->setFlash('error', 'Não é possível excluir esta clínica porque há registros relacionados.');
+            return $this->redirect(['index']); // Redirecione para a página anterior (ou outra página apropriada)
+        }
+    
+        // Se não houver registros relacionados, exclua a clínica
         $this->findModel($id)->delete();
-
+    
+        Yii::$app->session->setFlash('success', 'Clínica excluída com sucesso.');
+    
         return $this->redirect(['index']);
     }
 

@@ -49,7 +49,7 @@ $config = [
             'rules' => [
                 'profissional/cadastro-profissional' => 'profissional/cadastro-profissional',
                 'profissionais/profissional' => 'profissionais/profissional',
-                'profissionais' => 'profissionais/index',
+                'profissionais/view/<id:\d+>' => 'profissionais/view',
                 'profissionalClinica' => 'profissionalClinica/index',
             ],
         ],

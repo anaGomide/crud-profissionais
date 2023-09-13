@@ -25,22 +25,36 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
-            'id',
-            'profissional_id',
-            'clinica_id',
-            [
-                'class' => ActionColumn::className(),
-                'urlCreator' => function ($action, ProfissionalClinica $modelProfissionalClinica, $key, $index, $column) {
-                    return Url::toRoute([$action, 'id' => $modelProfissionalClinica->id]);
-                 }
-            ],
+    'dataProvider' => $dataProvider,
+    'filterModel' => $searchModel,
+    'columns' => [
+        ['class' => 'yii\grid\SerialColumn'],
+        
+        [
+            'attribute' => 'profissional_id', // Nome do atributo no modelo ProfissionalClinica
+            'value' => function ($model) {
+                return $model->profissional->Nome; // Acesse o atributo Nome do modelo Profissional através da relação
+            },
+            'label' => 'Profissional', // Rótulo da coluna
         ],
-    ]); ?>
+        
+        [
+            'attribute' => 'clinica_id', // Nome do atributo no modelo ProfissionalClinica
+            'value' => function ($model) {
+                return $model->clinica->nome; // Acesse o atributo nome do modelo Clinica através da relação
+            },
+            'label' => 'Clínica', // Rótulo da coluna
+        ],
+        
+        [
+            'class' => ActionColumn::className(),
+            'urlCreator' => function ($action, ProfissionalClinica $modelProfissionalClinica, $key, $index, $column) {
+                return Url::toRoute([$action, 'id' => $modelProfissionalClinica->id]);
+            },
+        ],
+    ],
+]); ?>
+
 
 
 </div>

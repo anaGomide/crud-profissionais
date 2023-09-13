@@ -39,30 +39,19 @@ class ProfissionalClinicaController extends Controller
      *
      * @return string
      */
-    public function actionIndex($profissional_id)
-    {
-        // Verifica se o ID do profissional é válido
-        $modelProfissionalClinica = new ProfissionalClinica();
-        $modelProfissional = Profissional::findOne($profissional_id);
+    public function actionIndex()
+{
+    $modelProfissionalClinica = new ProfissionalClinica();
 
-        if ($modelProfissional === null) {
-            throw new NotFoundHttpException('Profissional não encontrado.');
-        }
+    $searchModel = new ProfissionalClinicaSearch();
+    $dataProvider = $searchModel->search($this->request->queryParams);
 
-        $searchModel = new ProfissionalClinicaSearch();
-
-        // Configura o filtro para listar apenas as clínicas relacionadas ao profissional
-        $searchModel->profissional_id = $profissional_id;
-
-        $dataProvider = $searchModel->search($this->request->queryParams);
-
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-            'modelProfissionalClinica' => $modelProfissionalClinica,
-        ]);
-    }
-
+    return $this->render('index', [
+        'searchModel' => $searchModel,
+        'dataProvider' => $dataProvider,
+        'modelProfissionalClinica' => $modelProfissionalClinica,
+    ]);
+}
     /**
      * Displays a single ProfissionalClinica model.
      * @param int $id ID
@@ -122,11 +111,11 @@ class ProfissionalClinicaController extends Controller
      */
     public function actionUpdate($id)
     {
-
+        
         $modelProfissionalClinica = $this->findModel($id);
 
         if ($this->request->isPost && $modelProfissionalClinica->load($this->request->post()) && $modelProfissionalClinica->save()) {
-            return $this->redirect(['view', 'id' => $modelProfissionalClinica->id]);
+            return $this->redirect(['profissionais/view', 'ID' => $modelProfissionalClinica->profissional_id]);
         }
 
         return $this->render('update', [
@@ -144,20 +133,20 @@ class ProfissionalClinicaController extends Controller
     public function actionDelete($id)
     {
         // Encontre o modelo a ser excluído
-        $model = $this->findModel($id);
+    $model = $this->findModel($id);
 
-        // Salve a URL de retorno
-        $returnUrl = Yii::$app->request->post('returnUrl');
+    // Salve a URL de retorno
+    $returnUrl = Yii::$app->request->post('returnUrl');
 
-        // Exclua o modelo
-        $model->delete();
+    // Exclua o modelo
+    $model->delete();
 
-        // Redirecione de volta para a página anterior (a página "index" original ou outra página definida)
-        if ($returnUrl !== null) {
-            return $this->redirect($returnUrl);
-        } else {
-            return $this->redirect(['index']);
-        }
+    // Redirecione de volta para a página anterior (a página "index" original ou outra página definida)
+    if ($returnUrl !== null) {
+        return $this->redirect(['profissionais/view', 'ID' => $model->profissional_id]);
+    } else {
+        return $this->redirect(['index']);
+    }
     }
 
     /**
@@ -177,8 +166,9 @@ class ProfissionalClinicaController extends Controller
     }
 
     public function actionGetClinicas()
-    {
-        $clinicas = Clinica::find()->all();
-        return json_encode($clinicas);
-    }
+{
+    $clinicas = Clinica::find()->all();
+    return json_encode($clinicas);
+}
+
 }
