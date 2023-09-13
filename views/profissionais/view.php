@@ -87,19 +87,24 @@ $this->params['breadcrumbs'][] = $this->title;
     
         // Enviar a solicitação Ajax para a ação de criação apropriada
         $.ajax({
+            
             type: form.attr('method'),
             url: form.attr('action'),
             data: formData,
             success: function(data) {
                 // Atualizar a seção de exibição das clínicas vinculadas com o novo HTML
-                $('#clinicas-section').html(data);
+                // $('#clinicas-section').html(data);
     
                 // Fechar a modal após o envio bem-sucedido
-                $('#profissionalClinicaModal').modal('hide');
+                if (data.success == true){
+                    $('#profissionalClinicaModal').modal('hide');
+
+                    $.pjax.reload({container:'#index-clinicas',async:false});
+                }
+               
+                window.location.reload();
             },
-            error: function() {
-                // Lidar com erros, se necessário
-            }
+            
         });
     });
 ");

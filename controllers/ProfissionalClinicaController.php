@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use Yii;
 use app\models\Clinica;
 use app\models\Profissional;
 use app\models\ProfissionalClinica;
@@ -39,26 +40,28 @@ class ProfissionalClinicaController extends Controller
      * @return string
      */
     public function actionIndex($profissional_id)
-{
-    // Verifica se o ID do profissional é válido
-    $modelProfissional = Profissional::findOne($profissional_id);
-    
-    if ($modelProfissional === null) {
-        throw new NotFoundHttpException('Profissional não encontrado.');
+    {
+        // Verifica se o ID do profissional é válido
+        $modelProfissionalClinica = new ProfissionalClinica();
+        $modelProfissional = Profissional::findOne($profissional_id);
+
+        if ($modelProfissional === null) {
+            throw new NotFoundHttpException('Profissional não encontrado.');
+        }
+
+        $searchModel = new ProfissionalClinicaSearch();
+
+        // Configura o filtro para listar apenas as clínicas relacionadas ao profissional
+        $searchModel->profissional_id = $profissional_id;
+
+        $dataProvider = $searchModel->search($this->request->queryParams);
+
+        return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+            'modelProfissionalClinica' => $modelProfissionalClinica,
+        ]);
     }
-
-    $searchModel = new ProfissionalClinicaSearch();
-    
-    // Configura o filtro para listar apenas as clínicas relacionadas ao profissional
-    $searchModel->profissional_id = $profissional_id;
-    
-    $dataProvider = $searchModel->search($this->request->queryParams);
-
-    return $this->render('index', [
-        'searchModel' => $searchModel,
-        'dataProvider' => $dataProvider,
-    ]);
-}
 
     /**
      * Displays a single ProfissionalClinica model.
@@ -87,28 +90,28 @@ class ProfissionalClinicaController extends Controller
      * @return string|\yii\web\Response
      */
     public function actionCreate()
-{
-    $modelProfissionalClinica = new ProfissionalClinica();
+    {
+        $modelProfissionalClinica = new ProfissionalClinica();
 
-    if ($this->request->isPost) {
-        if ($modelProfissionalClinica->load($this->request->post()) && $modelProfissionalClinica->save()) {
-            // Após um salvamento bem-sucedido, obtenha as clínicas vinculadas ao profissional
-            $clinicas = ProfissionalClinica::find()->where(['profissional_id' => $modelProfissionalClinica->profissional_id])->all();
+        if ($this->request->isPost) {
+            if ($modelProfissionalClinica->load($this->request->post()) && $modelProfissionalClinica->save()) {
+                // Após um salvamento bem-sucedido, obtenha as clínicas vinculadas ao profissional
+                $clinicas = ProfissionalClinica::find()->where(['profissional_id' => $modelProfissionalClinica->profissional_id])->all();
 
-            // Renderize a visão parcial _clinicas_section e retorne-a como uma resposta JSON
-            return $this->asJson([
-                'success' => true,
-                'clinicas' => $this->renderPartial('_clinicas_section', ['clinicas' => $clinicas]),
-            ]);
+                // Renderize a visão parcial _clinicas_section e retorne-a como uma resposta JSON
+                \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+                return [
+                    'success' => true,
+                ];
+            }
+        } else {
+            $modelProfissionalClinica->loadDefaultValues();
         }
-    } else {
-        $modelProfissionalClinica->loadDefaultValues();
-    }
 
-    return $this->render('create', [
-        'modelProfissionalClinica' => $modelProfissionalClinica,
-    ]);
-}
+        return $this->render('create', [
+            'modelProfissionalClinica' => $modelProfissionalClinica,
+        ]);
+    }
 
     /**
      * Updates an existing ProfissionalClinica model.
@@ -119,7 +122,7 @@ class ProfissionalClinicaController extends Controller
      */
     public function actionUpdate($id)
     {
-        
+
         $modelProfissionalClinica = $this->findModel($id);
 
         if ($this->request->isPost && $modelProfissionalClinica->load($this->request->post()) && $modelProfissionalClinica->save()) {
@@ -140,9 +143,21 @@ class ProfissionalClinicaController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        // Encontre o modelo a ser excluído
+        $model = $this->findModel($id);
 
-        return $this->redirect(['index']);
+        // Salve a URL de retorno
+        $returnUrl = Yii::$app->request->post('returnUrl');
+
+        // Exclua o modelo
+        $model->delete();
+
+        // Redirecione de volta para a página anterior (a página "index" original ou outra página definida)
+        if ($returnUrl !== null) {
+            return $this->redirect($returnUrl);
+        } else {
+            return $this->redirect(['index']);
+        }
     }
 
     /**
@@ -162,9 +177,8 @@ class ProfissionalClinicaController extends Controller
     }
 
     public function actionGetClinicas()
-{
-    $clinicas = Clinica::find()->all();
-    return json_encode($clinicas);
-}
-
+    {
+        $clinicas = Clinica::find()->all();
+        return json_encode($clinicas);
+    }
 }

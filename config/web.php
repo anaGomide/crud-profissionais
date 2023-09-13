@@ -50,7 +50,7 @@ $config = [
                 'profissional/cadastro-profissional' => 'profissional/cadastro-profissional',
                 'profissionais/profissional' => 'profissionais/profissional',
                 'profissionais' => 'profissionais/index',
-                'profissionalClinica => profissionalClinica/index',
+                'profissionalClinica' => 'profissionalClinica/index',
             ],
         ],
 

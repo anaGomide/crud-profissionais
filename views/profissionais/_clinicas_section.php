@@ -1,11 +1,16 @@
 <?php
+
 use yii\helpers\Html;
 use yii\grid\GridView;
+use yii\widgets\Pjax;
 
 /* @var $clinicas app\models\ProfissionalClinica[] */
 ?>
 
-<?= GridView::widget([
+<?php
+Pjax::begin(['id' => 'index-clinicas']);
+
+echo GridView::widget([
     'dataProvider' => new \yii\data\ArrayDataProvider(['allModels' => $clinicas]),
     'columns' => [
         'clinica.nome',
@@ -13,9 +18,11 @@ use yii\grid\GridView;
             'class' => 'yii\grid\ActionColumn',
             'template' => '{update} {delete}',
             'urlCreator' => function ($action, $model, $key, $index) {
-                // Defina as URLs das ações (update, delete) conforme necessário
+
                 return ['profissional-clinica/' . $action, 'id' => $model->id];
             },
         ],
     ],
-]) ?>
+]);
+Pjax::end();
+?>
